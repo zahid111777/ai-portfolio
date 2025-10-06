@@ -67,7 +67,12 @@ const Experience: React.FC = () => {
                 'Customer Segmentation Analysis using K-means Clustering',
                 'Sentiment Analysis of Product Reviews using NLP techniques',
                 'Sales Forecasting Dashboard with interactive visualizations',
-                'Image Classification project using CNN for digit recognition'
+                'Image Classification project using CNN for digit recognition',
+                'Basic Web Scraping Tool using Python and BeautifulSoup',
+                'Student Grade Prediction System using Multiple Linear Regression',
+                'Simple Chatbot using Natural Language Processing',
+                'Data Cleaning and Analysis Project on Real Estate Dataset',
+                'Beginner Time Series Analysis for Stock Price Prediction'
             ],
             technologies: ['Python', 'Flask', 'SQL', 'NumPy', 'Pandas', 'Matplotlib', 'Scikit-learn', 'Deep Learning', 'Transformers']
         }
