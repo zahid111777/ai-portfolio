@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import profileImage from '../assets/zahid-profile.jpeg';
 
 const About: React.FC = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -201,7 +202,7 @@ const About: React.FC = () => {
                 <div className="hero-image">
                     <div className="profile-container">
                         <div className="profile-photo">
-                            <img src="/zahid-profile.jpeg" alt="Zahid Rashid - AI Engineer" />
+                            <img src={profileImage} alt="Zahid Rashid - AI Engineer" />
                             <div className="photo-ring ring1"></div>
                             <div className="photo-ring ring2"></div>
                             <div className="photo-ring ring3"></div>
