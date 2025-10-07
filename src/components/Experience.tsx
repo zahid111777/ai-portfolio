@@ -63,16 +63,13 @@ const Experience: React.FC = () => {
                 'Built beginner-level projects demonstrating core data science skills'
             ],
             projects: [
-                'House Price Prediction Model using Linear Regression and Random Forest',
-                'Customer Segmentation Analysis using K-means Clustering',
-                'Sentiment Analysis of Product Reviews using NLP techniques',
-                'Sales Forecasting Dashboard with interactive visualizations',
-                'Image Classification project using CNN for digit recognition',
-                'Basic Web Scraping Tool using Python and BeautifulSoup',
-                'Student Grade Prediction System using Multiple Linear Regression',
-                'Simple Chatbot using Natural Language Processing',
-                'Data Cleaning and Analysis Project on Real Estate Dataset',
-                'Beginner Time Series Analysis for Stock Price Prediction'
+                'Basic Calculator Application using Python and Tkinter GUI',
+                'Student Grade Management System with Flask web framework',
+                'Simple Data Analysis of Sales Dataset using Pandas and Matplotlib',
+                'Basic Linear Regression Model for predicting house prices',
+                'Beginner-level Image Classification using basic CNN architecture',
+                'Simple Web Scraping project to collect and analyze data',
+                'Basic Chatbot using rule-based NLP techniques'
             ],
             technologies: ['Python', 'Flask', 'SQL', 'NumPy', 'Pandas', 'Matplotlib', 'Scikit-learn', 'Deep Learning', 'Transformers']
         }
