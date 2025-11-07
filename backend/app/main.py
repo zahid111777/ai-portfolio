@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 import os
 
 from .config import settings
-from .database import engine, get_db
+from .database import engine, get_db, SessionLocal
 from .models import Base, User as UserModel
 from .auth import get_password_hash
 from .routers import auth, about, experience, projects, skills, contact, upload
@@ -70,9 +70,64 @@ app.include_router(upload.router, prefix="/api")
 
 @app.on_event("startup")
 async def startup_event():
-    """Startup event - admin user should be created manually."""
-    # Admin user creation disabled - use setup_new_admin.py to create admin
-    pass
+    """Startup event - create admin user and sample data for Vercel deployment."""
+    try:
+        # For Vercel (in-memory database), create admin user and sample data on startup
+        if os.getenv("VERCEL"):
+            from sqlalchemy.orm import Session
+            from .auth import get_password_hash
+            from .models import About, Experience, Project, Skill, Contact
+            
+            # Create admin user and sample data in memory database
+            db = SessionLocal()
+            try:
+                # Check if admin user exists
+                admin_user = db.query(UserModel).filter(UserModel.username == settings.admin_username).first()
+                if not admin_user:
+                    # Create admin user
+                    hashed_password = get_password_hash(settings.admin_password)
+                    admin_user = UserModel(
+                        username=settings.admin_username,
+                        hashed_password=hashed_password,
+                        email="admin@portfolio.com",
+                        is_active=True
+                    )
+                    db.add(admin_user)
+                    
+                    # Create sample about data
+                    about = About(
+                        name="Zahid Rashid",
+                        title="Full Stack Developer",
+                        description="Passionate developer with experience in modern web technologies.",
+                        email="zahid@example.com",
+                        phone="+1234567890",
+                        location="Your Location",
+                        profile_image="assets/profile.jpg"
+                    )
+                    db.add(about)
+                    
+                    # Create sample skills
+                    skills = [
+                        Skill(name="JavaScript", category="Programming", proficiency=90),
+                        Skill(name="Python", category="Programming", proficiency=85),
+                        Skill(name="React", category="Frontend", proficiency=88),
+                        Skill(name="FastAPI", category="Backend", proficiency=82)
+                    ]
+                    for skill in skills:
+                        db.add(skill)
+                    
+                    db.commit()
+                    print(f"Admin user and sample data created for Vercel deployment")
+                else:
+                    print(f"Admin user already exists: {settings.admin_username}")
+            except Exception as e:
+                print(f"Error creating admin user and sample data: {e}")
+                db.rollback()
+            finally:
+                db.close()
+    except Exception as e:
+        print(f"Startup error: {e}")
+        pass
 
 @app.get("/api/health")
 async def health_check():

@@ -31,6 +31,7 @@
   "env": {
     "CI": "false",
     "REACT_APP_USE_FALLBACK": "false",
-    "ENVIRONMENT": "production"
+    "ENVIRONMENT": "production",
+    "VERCEL": "1"
   }
 }
