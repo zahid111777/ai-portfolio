@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { contactAPI } from '../services/api';
 
 const Contact: React.FC = () => {
     const [formData, setFormData] = useState({
@@ -8,6 +9,13 @@ const Contact: React.FC = () => {
         message: ''
     });
 
+    const [submitStatus, setSubmitStatus] = useState<{
+        type: 'success' | 'error' | null;
+        message: string;
+    }>({ type: null, message: '' });
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setFormData({
             ...formData,
@@ -15,10 +23,32 @@ const Contact: React.FC = () => {
         });
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Handle form submission logic here
-        console.log('Form submitted:', formData);
+        setIsSubmitting(true);
+        setSubmitStatus({ type: null, message: '' });
+
+        try {
+            await contactAPI.sendMessage(formData);
+            setSubmitStatus({
+                type: 'success',
+                message: 'Thank you! Your message has been sent successfully.'
+            });
+            // Reset form
+            setFormData({
+                name: '',
+                email: '',
+                subject: '',
+                message: ''
+            });
+        } catch (error) {
+            setSubmitStatus({
+                type: 'error',
+                message: 'Sorry, there was an error sending your message. Please try again or contact me directly via email.'
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -59,6 +89,12 @@ const Contact: React.FC = () => {
                     </div>
 
                     <div className="contact-form">
+                        {submitStatus.type && (
+                            <div className={`alert alert-${submitStatus.type}`}>
+                                {submitStatus.message}
+                            </div>
+                        )}
+                        
                         <form onSubmit={handleSubmit}>
                             <div className="form-group">
                                 <input
@@ -68,6 +104,7 @@ const Contact: React.FC = () => {
                                     value={formData.name}
                                     onChange={handleChange}
                                     required
+                                    disabled={isSubmitting}
                                 />
                             </div>
                             <div className="form-group">
@@ -78,6 +115,7 @@ const Contact: React.FC = () => {
                                     value={formData.email}
                                     onChange={handleChange}
                                     required
+                                    disabled={isSubmitting}
                                 />
                             </div>
                             <div className="form-group">
@@ -88,6 +126,7 @@ const Contact: React.FC = () => {
                                     value={formData.subject}
                                     onChange={handleChange}
                                     required
+                                    disabled={isSubmitting}
                                 />
                             </div>
                             <div className="form-group">
@@ -98,9 +137,16 @@ const Contact: React.FC = () => {
                                     value={formData.message}
                                     onChange={handleChange}
                                     required
+                                    disabled={isSubmitting}
                                 ></textarea>
                             </div>
-                            <button type="submit" className="submit-btn">Send Message</button>
+                            <button 
+                                type="submit" 
+                                className="submit-btn"
+                                disabled={isSubmitting}
+                            >
+                                {isSubmitting ? 'Sending...' : 'Send Message'}
+                            </button>
                         </form>
                     </div>
                 </div>

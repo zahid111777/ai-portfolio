@@ -1,6 +1,6 @@
-# Getting Started with Create React App
+# Dynamic Portfolio with FastAPI Backend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project transforms your static React portfolio into a dynamic one with a FastAPI backend and admin panel, allowing you to manage all content without code changes.
 
 ## Available Scripts
 

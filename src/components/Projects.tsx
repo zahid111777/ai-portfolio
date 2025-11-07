@@ -1,67 +1,26 @@
 import React from 'react';
+import { projectsAPI } from '../services/api';
+import { useAPI } from '../hooks/useAPI';
+import { fallbackProjects } from '../data/fallbackData';
 
 const Projects: React.FC = () => {
-    const projects = [
-        {
-            title: 'Intelligent Customer Analytics Platform',
-            description: 'End-to-end ML platform for customer behavior prediction and segmentation using advanced deep learning techniques.',
-            technologies: ['Python', 'TensorFlow', 'AWS', 'React', 'SQL'],
-            features: [
-                'Real-time customer behavior prediction',
-                'Advanced customer segmentation algorithms',
-                'Interactive analytics dashboard',
-                'Automated model retraining pipeline'
-            ],
-            metrics: ['25% increase in customer retention', '40% improvement in marketing ROI'],
-            githubUrl: 'https://github.com/zahidrashid',
-            liveUrl: 'https://analytics-platform.demo.com',
-            image: '/projects/analytics-platform.jpg'
-        },
-        {
-            title: 'AI-Powered Content Recommendation Engine',
-            description: 'Scalable recommendation system using collaborative filtering and deep learning for personalized content delivery.',
-            technologies: ['PyTorch', 'FastAPI', 'Docker', 'MongoDB'],
-            features: [
-                'Hybrid recommendation algorithms',
-                'Real-time inference API',
-                'A/B testing framework',
-                'Scalable microservices architecture'
-            ],
-            metrics: ['35% increase in user engagement', '50% reduction in content discovery time'],
-            githubUrl: 'https://github.com/zahidrashid',
-            liveUrl: 'https://recommendation-engine.demo.com',
-            image: '/projects/recommendation-engine.jpg'
-        },
-        {
-            title: 'Computer Vision Quality Control System',
-            description: 'Automated quality inspection system using computer vision and deep learning for manufacturing processes.',
-            technologies: ['OpenCV', 'TensorFlow', 'Flask', 'PostgreSQL', 'Docker'],
-            features: [
-                'Real-time defect detection',
-                'Multi-class classification',
-                'Production line integration',
-                'Quality metrics dashboard'
-            ],
-            metrics: ['99.2% accuracy in defect detection', '60% reduction in manual inspection time'],
-            githubUrl: 'https://github.com/zahidrashid',
-            image: '/projects/quality-control.jpg'
-        }
-    ];
+    // Fetch projects from API with fallback data
+    const { data: projects } = useAPI(() => projectsAPI.getAll(true), fallbackProjects);
 
     return (
         <section className="projects-section">
             <div className="container">
                 <h2 className="section-title">Featured Projects</h2>
                 <div className="projects-grid">
-                    {projects.map((project, index) => (
-                        <div key={index} className="project-card">
+                    {projects.map((project: any, index: number) => (
+                        <div key={project.id} className="project-card">
                             <div className="project-image">
                                 <img src={project.image} alt={project.title} />
                                 <div className="project-overlay">
                                     <div className="project-links">
-                                        <a href={project.githubUrl} className="project-link">GitHub</a>
-                                        {project.liveUrl && (
-                                            <a href={project.liveUrl} className="project-link">Live Demo</a>
+                                        <a href={project.github_url} className="project-link">GitHub</a>
+                                        {project.live_url && (
+                                            <a href={project.live_url} className="project-link">Live Demo</a>
                                         )}
                                     </div>
                                 </div>
@@ -73,8 +32,8 @@ const Projects: React.FC = () => {
                                 <div className="project-features">
                                     <h4>Key Features:</h4>
                                     <ul>
-                                        {project.features.map((feature, idx) => (
-                                            <li key={idx}>{feature}</li>
+                                        {project.features.map((feature: any, idx: number) => (
+                                            <li key={feature.id}>{feature.description}</li>
                                         ))}
                                     </ul>
                                 </div>
@@ -82,15 +41,15 @@ const Projects: React.FC = () => {
                                 <div className="project-metrics">
                                     <h4>Impact:</h4>
                                     <ul>
-                                        {project.metrics.map((metric, idx) => (
-                                            <li key={idx}>{metric}</li>
+                                        {project.metrics.map((metric: any, idx: number) => (
+                                            <li key={metric.id}>{metric.description}</li>
                                         ))}
                                     </ul>
                                 </div>
 
                                 <div className="project-technologies">
-                                    {project.technologies.map((tech, idx) => (
-                                        <span key={idx} className="tech-tag">{tech}</span>
+                                    {project.technologies.map((tech: any, idx: number) => (
+                                        <span key={tech.id} className="tech-tag">{tech.name}</span>
                                     ))}
                                 </div>
                             </div>

@@ -1,11 +1,19 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import profileImage from '../assets/zahid-profile.jpeg';
+import { aboutAPI } from '../services/api';
+import { useAPI } from '../hooks/useAPI';
+import { fallbackAboutInfo, fallbackHighlights } from '../data/fallbackData';
 
 const About: React.FC = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [typedText, setTypedText] = useState('');
-    const fullText = 'AI Engineer & Machine Learning Specialist';
+    
+    // Fetch data from API with fallbacks
+    const { data: aboutInfo } = useAPI(() => aboutAPI.getInfo(), fallbackAboutInfo);
+    const { data: highlights } = useAPI(() => aboutAPI.getHighlights(), fallbackHighlights);
+    
+    const fullText = aboutInfo.title;
 
     useEffect(() => {
         // Typing animation
@@ -135,8 +143,8 @@ const About: React.FC = () => {
                     </div>
                     
                     <h1 className="name">
-                        <span className="first-name">Zahid</span>
-                        <span className="last-name">Rashid</span>
+                        <span className="first-name">{aboutInfo.name.split(' ')[0]}</span>
+                        <span className="last-name">{aboutInfo.name.split(' ')[1]}</span>
                         <div className="name-underline"></div>
                     </h1>
                     <div className="title-container">
@@ -146,42 +154,33 @@ const About: React.FC = () => {
                         </h2>
                     </div>
                     <p className="description">
-                        Passionate AI Engineer with expertise in <strong>machine learning</strong>, <strong>deep learning</strong>, 
-                        and <strong>data science</strong>. I specialize in developing innovative AI solutions, 
-                        building predictive models, and integrating cutting-edge AI technologies 
-                        into business applications to drive digital transformation.
+                        {aboutInfo.description}
                     </p>
                     
                     <div className="highlights">
-                        <div className="highlight-item">
-                            <div className="highlight-icon">🚀</div>
-                            <span>Building the Future with AI</span>
-                        </div>
-                        <div className="highlight-item">
-                            <div className="highlight-icon">💡</div>
-                            <span>Innovative Problem Solver</span>
-                        </div>
-                        <div className="highlight-item">
-                            <div className="highlight-icon">⚡</div>
-                            <span>Performance Optimizer</span>
-                        </div>
+                        {highlights.map((highlight: any) => (
+                            <div key={highlight.id} className="highlight-item">
+                                <div className="highlight-icon">{highlight.icon}</div>
+                                <span>{highlight.text}</span>
+                            </div>
+                        ))}
                     </div>
 
                     <div className="hero-stats">
                         <div className="stat">
-                            <span className="stat-number" data-count="3">0</span><span className="plus">+</span>
+                            <span className="stat-number" data-count={aboutInfo.years_experience}>0</span><span className="plus">+</span>
                             <span className="stat-label">Years Experience</span>
                         </div>
                         <div className="stat">
-                            <span className="stat-number" data-count="25">0</span><span className="plus">+</span>
+                            <span className="stat-number" data-count={aboutInfo.ai_projects}>0</span><span className="plus">+</span>
                             <span className="stat-label">AI Projects</span>
                         </div>
                         <div className="stat">
-                            <span className="stat-number" data-count="50">0</span><span className="plus">+</span>
+                            <span className="stat-number" data-count={aboutInfo.ml_models}>0</span><span className="plus">+</span>
                             <span className="stat-label">ML Models</span>
                         </div>
                         <div className="stat">
-                            <span className="stat-number" data-count="98">0</span><span className="plus">%</span>
+                            <span className="stat-number" data-count={aboutInfo.accuracy_rate}>0</span><span className="plus">%</span>
                             <span className="stat-label">Accuracy Rate</span>
                         </div>
                     </div>
@@ -189,7 +188,7 @@ const About: React.FC = () => {
                         <Link to="/contact" className="btn-primary">
                             <span className="btn-text">Get In Touch</span>
                         </Link>
-                        <a href="/resume.pdf" className="btn-secondary">
+                        <a href={aboutInfo.cv_url || "/resume.pdf"} className="btn-secondary">
                             <span className="btn-text">Download CV</span>
                             <svg className="download-icon" viewBox="0 0 24 24" fill="none">
                                 <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -202,7 +201,7 @@ const About: React.FC = () => {
                 <div className="hero-image">
                     <div className="profile-container">
                         <div className="profile-photo">
-                            <img src={profileImage} alt="Zahid Rashid - AI Engineer" />
+                            <img src={aboutInfo.profile_image || profileImage} alt={`${aboutInfo.name} - ${aboutInfo.title}`} />
                             <div className="photo-ring ring1"></div>
                             <div className="photo-ring ring2"></div>
                             <div className="photo-ring ring3"></div>

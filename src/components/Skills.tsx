@@ -1,59 +1,12 @@
 import React from 'react';
+import { skillsAPI } from '../services/api';
+import { useAPI } from '../hooks/useAPI';
+import { fallbackSkillCategories, fallbackSpecializations } from '../data/fallbackData';
 
 const Skills: React.FC = () => {
-    const skillCategories = [
-        {
-            category: 'AI/ML Frameworks',
-            skills: [
-                { name: 'TensorFlow', level: 90 },
-                { name: 'PyTorch', level: 85 },
-                { name: 'Scikit-learn', level: 95 },
-                { name: 'Keras', level: 88 },
-                { name: 'Hugging Face', level: 80 }
-            ]
-        },
-        {
-            category: 'Programming Languages',
-            skills: [
-                { name: 'Python', level: 95 },
-                { name: 'JavaScript', level: 85 },
-                // { name: 'TypeScript', level: 80 },
-                // { name: 'R', level: 75 },
-                { name: 'SQL', level: 90 }
-            ]
-        },
-        {
-            category: 'Cloud & DevOps',
-            skills: [
-                { name: 'AWS', level: 85 },
-                { name: 'Docker', level: 80 },
-                // { name: 'Kubernetes', level: 75 },
-                { name: 'MLflow', level: 85 },
-                { name: 'Git', level: 90 }
-            ]
-        },
-        {
-            category: 'Data & Databases',
-            skills: [
-                { name: 'PostgreSQL', level: 85 },
-                { name: 'MongoDB', level: 80 },
-                // { name: 'Redis', level: 75 },
-                // { name: 'Apache Spark', level: 70 },
-                // { name: 'Elasticsearch', level: 65 }
-            ]
-        }
-    ];
-
-    const specializations = [
-        'Computer Vision',
-        'Natural Language Processing',
-        'Deep Learning',
-        'Predictive Analytics',
-        'Time Series Forecasting',
-        'Recommendation Systems',
-        'MLOps',
-        'Data Engineering'
-    ];
+    // Fetch skills from API with fallback data
+    const { data: skillCategories } = useAPI(() => skillsAPI.getAll(), fallbackSkillCategories);
+    const { data: specializations } = useAPI(() => skillsAPI.getCategories(), fallbackSpecializations);
 
     return (
         <section className="skills-section">
@@ -61,11 +14,11 @@ const Skills: React.FC = () => {
                 <h2 className="section-title">Skills & Expertise</h2>
                 
                 <div className="skills-grid">
-                    {skillCategories.map((category, index) => (
+                    {skillCategories.map((category: any, index: number) => (
                         <div key={index} className="skill-category">
                             <h3 className="category-title">{category.category}</h3>
                             <div className="skills-list">
-                                {category.skills.map((skill, idx) => (
+                                {category.skills.map((skill: any, idx: number) => (
                                     <div key={idx} className="skill-item">
                                         <div className="skill-info">
                                             <span className="skill-name">{skill.name}</span>
@@ -87,7 +40,7 @@ const Skills: React.FC = () => {
                 <div className="specializations">
                     <h3 className="specializations-title">AI Specializations</h3>
                     <div className="specializations-grid">
-                        {specializations.map((spec, index) => (
+                        {specializations.map((spec: string, index: number) => (
                             <div key={index} className="specialization-card">
                                 <span className="specialization-name">{spec}</span>
                             </div>
