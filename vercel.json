@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "name": "ai-portfolio-dynamic",
   "builds": [
     {
       "src": "package.json",
@@ -7,9 +8,25 @@
       "config": {
         "distDir": "build"
       }
+    },
+    {
+      "src": "api/index.py",
+      "use": "@vercel/python"
     }
   ],
   "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/index.py"
+    },
+    {
+      "src": "/admin",
+      "dest": "/admin/index.html"
+    },
+    {
+      "src": "/admin/(.*)",
+      "dest": "/admin/$1"
+    },
     {
       "src": "/static/(.*)",
       "dest": "/static/$1"
@@ -18,5 +35,12 @@
       "src": "/(.*)",
       "dest": "/index.html"
     }
-  ]
+  ],
+  "outputDirectory": "build",
+  "installCommand": "npm install && cd admin && npm install",
+  "buildCommand": "npm run build && cd admin && npm run build && mkdir -p build/admin && cp -r admin/build/* build/admin/",
+  "env": {
+    "REACT_APP_USE_FALLBACK": "false",
+    "ENVIRONMENT": "production"
+  }
 }

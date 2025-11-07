@@ -1,21 +1,75 @@
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+import { 
+  fallbackAboutInfo, 
+  fallbackHighlights, 
+  fallbackExperiences, 
+  fallbackProjects, 
+  fallbackSkills,
+  fallbackSkillCategories,
+  fallbackSpecializations
+} from '../data/fallbackData';
 
-// Simple fetch wrapper for API calls
+const API_BASE_URL = process.env.REACT_APP_API_URL || (
+  process.env.NODE_ENV === 'production' 
+    ? '/api' 
+    : 'http://localhost:8000/api'
+);
+const USE_FALLBACK = process.env.REACT_APP_USE_FALLBACK === 'true' || false;
+
+// Simple fetch wrapper for API calls with fallback support
 const apiCall = async (endpoint: string, options: RequestInit = {}) => {
-  const url = `${API_BASE_URL}${endpoint}`;
-  const response = await fetch(url, {
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
-    ...options,
-  });
-
-  if (!response.ok) {
-    throw new Error(`API call failed: ${response.status}`);
+  // Return fallback data if enabled
+  if (USE_FALLBACK) {
+    return getFallbackData(endpoint);
   }
 
-  return response.json();
+  try {
+    const url = `${API_BASE_URL}${endpoint}`;
+    const response = await fetch(url, {
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+      ...options,
+    });
+
+    if (!response.ok) {
+      throw new Error(`API call failed: ${response.status}`);
+    }
+
+    return response.json();
+  } catch (error) {
+    console.warn(`API call failed for ${endpoint}, using fallback data:`, error);
+    return getFallbackData(endpoint);
+  }
+};
+
+// Helper function to get fallback data based on endpoint
+const getFallbackData = (endpoint: string) => {
+  // Handle projects with query parameters
+  if (endpoint.startsWith('/projects')) {
+    return fallbackProjects;
+  }
+  // Handle skills endpoints
+  if (endpoint.startsWith('/skills/grouped')) {
+    return fallbackSkillCategories;
+  }
+  if (endpoint.startsWith('/skills/categories')) {
+    return fallbackSpecializations;
+  }
+  if (endpoint.startsWith('/skills')) {
+    return fallbackSkills;
+  }
+  
+  switch (endpoint) {
+    case '/about/info':
+      return fallbackAboutInfo;
+    case '/about/highlights':
+      return fallbackHighlights;
+    case '/experience':
+      return fallbackExperiences;
+    default:
+      return [];
+  }
 };
 
 // About API

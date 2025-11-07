@@ -30,12 +30,22 @@ allowed_origins = [
     "http://localhost:3001"
 ]
 
-# Add Vercel domain patterns for production
-if os.getenv("VERCEL_URL"):
-    allowed_origins.extend([
-        f"https://{os.getenv('VERCEL_URL')}",
-        "https://*.vercel.app"
-    ])
+# Add production domain patterns
+production_domains = [
+    "https://*.vercel.app",
+    "https://*.netlify.app",
+    "https://*.herokuapp.com",
+    "https://*.railway.app",
+    "https://*.onrender.com"
+]
+
+# Add your custom domain if you have one
+if os.getenv("FRONTEND_DOMAIN"):
+    allowed_origins.append(os.getenv("FRONTEND_DOMAIN"))
+
+# In production, allow common deployment platforms
+if os.getenv("ENVIRONMENT") == "production":
+    allowed_origins.extend(production_domains)
 
 app.add_middleware(
     CORSMiddleware,

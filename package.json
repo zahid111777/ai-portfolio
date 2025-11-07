@@ -16,10 +16,11 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
-    "eject": "react-scripts eject",
+    "build": "react-scripts build && npm run build:admin && npm run build:combine",
     "build:admin": "cd admin && npm run build",
-    "install:admin": "cd admin && npm install"
+    "build:combine": "node scripts/combine-builds.js",
+    "install:admin": "cd admin && npm install",
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
@@ -40,6 +41,7 @@
     ]
   },
   "devDependencies": {
+    "fs-extra": "^11.3.2",
     "vercel": "^48.2.0"
   }
 }
