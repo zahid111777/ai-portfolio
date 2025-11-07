@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: ai-portfolio-backend
+    env: python
+    region: oregon
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        value: sqlite:///./portfolio.db
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ADMIN_USERNAME
+        value: zahid
+      - key: ADMIN_PASSWORD
+        value: zahid@786
+      - key: FRONTEND_URL
+        value: https://zahidrashid.vercel.app
+      - key: ADMIN_URL
+        value: https://zahidrashid-admin.vercel.app
+      - key: CORS_ORIGINS
+        value: https://zahidrashid.vercel.app,http://localhost:3000,http://localhost:3001

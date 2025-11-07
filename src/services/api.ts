@@ -1,4 +1,8 @@
-const API_BASE_URL = process.env.REACT_APP_API_URL || '/api';
+// API Base URL - supports both development and production
+const API_BASE_URL = process.env.REACT_APP_API_URL || 
+  (process.env.NODE_ENV === 'production' 
+    ? 'https://ai-portfolio-backend.onrender.com/api'  // Update this URL after deployment
+    : 'http://localhost:8000/api');
 
 // Simple fetch wrapper for API calls
 const apiCall = async (endpoint: string, options: RequestInit = {}) => {
