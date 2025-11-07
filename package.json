@@ -16,7 +16,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && npm run build:admin && npm run build:combine",
+    "build": "react-scripts build",
     "build:main": "react-scripts build",
     "build:admin": "cd admin && npm run build",
     "build:combine": "node scripts/combine-builds.js",
