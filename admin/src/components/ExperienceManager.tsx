@@ -480,12 +480,12 @@ const ExperienceManager: React.FC = () => {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 <div>
-                  <p className="font-medium text-gray-700">Responsibilities: {exp.responsibilities.length}</p>
-                  <p className="font-medium text-gray-700">Achievements: {exp.achievements.length}</p>
+                  <p className="font-medium text-gray-700">Responsibilities: {exp.responsibilities?.length || 0}</p>
+                  <p className="font-medium text-gray-700">Achievements: {exp.achievements?.length || 0}</p>
                 </div>
                 <div>
-                  <p className="font-medium text-gray-700">Projects: {exp.projects.length}</p>
-                  <p className="font-medium text-gray-700">Technologies: {exp.technologies.length}</p>
+                  <p className="font-medium text-gray-700">Projects: {exp.projects?.length || 0}</p>
+                  <p className="font-medium text-gray-700">Technologies: {exp.technologies?.length || 0}</p>
                 </div>
               </div>
             </div>
