@@ -18,26 +18,37 @@ import {
 export const authService = {
   login: async (username: string, password: string) => {
     try {
-      const formData = new FormData();
-      formData.append('username', username);
-      formData.append('password', password);
+      // Use URLSearchParams instead of FormData for proper form encoding
+      const params = new URLSearchParams();
+      params.append('username', username);
+      params.append('password', password);
       
-      console.log('Attempting login with username:', username);
+      console.log('Attempting login...');
       console.log('API URL:', api.defaults.baseURL);
+      console.log('Username:', username);
+      console.log('Sending request with URLSearchParams');
       
-      const response = await api.post('/token', formData);
+      const response = await api.post('/token', params, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        }
+      });
+      
       const { access_token } = response.data;
       
-      console.log('Login successful, token received');
+      console.log('Login successful, token received:', access_token);
       localStorage.setItem('token', access_token);
       return access_token;
     } catch (error: any) {
-      console.error('Login error details:', {
+      console.error('Login error full details:', error);
+      console.error('Error response:', {
         status: error.response?.status,
+        statusText: error.response?.statusText,
         data: error.response?.data,
         message: error.message,
         url: error.config?.url,
-        method: error.config?.method
+        method: error.config?.method,
+        headers: error.config?.headers
       });
       throw error;
     }
