@@ -201,7 +201,7 @@ const About: React.FC = () => {
                 <div className="hero-image">
                     <div className="profile-container">
                         <div className="profile-photo">
-                            <img src={aboutInfo.profile_image || profileImage} alt={`${aboutInfo.name} - ${aboutInfo.title}`} />
+                            <img src={profileImage} alt={`${aboutInfo.name} - ${aboutInfo.title}`} />
                             <div className="photo-ring ring1"></div>
                             <div className="photo-ring ring2"></div>
                             <div className="photo-ring ring3"></div>

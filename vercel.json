@@ -10,54 +10,30 @@
       }
     },
     {
-      "src": "api/health.py",
-      "use": "@vercel/python"
+      "src": "api/health.js",
+      "use": "@vercel/node"
     },
     {
-      "src": "api/about.py",
-      "use": "@vercel/python"
+      "src": "api/about.js",
+      "use": "@vercel/node"
     },
     {
-      "src": "api/skills.py",
-      "use": "@vercel/python"
-    },
-    {
-      "src": "api/experience.py",
-      "use": "@vercel/python"
-    },
-    {
-      "src": "api/projects.py",
-      "use": "@vercel/python"
-    },
-    {
-      "src": "api/auth/login.py",
-      "use": "@vercel/python"
+      "src": "api/auth/login.js",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/api/health",
-      "dest": "/api/health.py"
+      "dest": "/api/health.js"
     },
     {
       "src": "/api/about",
-      "dest": "/api/about.py"
-    },
-    {
-      "src": "/api/skills",
-      "dest": "/api/skills.py"
-    },
-    {
-      "src": "/api/experience",
-      "dest": "/api/experience.py"
-    },
-    {
-      "src": "/api/projects",
-      "dest": "/api/projects.py"
+      "dest": "/api/about.js"
     },
     {
       "src": "/api/auth/login",
-      "dest": "/api/auth/login.py"
+      "dest": "/api/auth/login.js"
     },
     {
       "src": "/static/(.*)",
@@ -74,7 +50,7 @@
   ],
   "env": {
     "CI": "false",
-    "REACT_APP_USE_FALLBACK": "false",
+    "REACT_APP_USE_FALLBACK": "true",
     "ENVIRONMENT": "production",
     "VERCEL": "1"
   }
