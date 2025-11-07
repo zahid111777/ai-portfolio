@@ -2,7 +2,7 @@
   "name": "portfolio-admin",
   "version": "0.1.0",
   "private": true,
-  "homepage": "/admin",
+  "homepage": "/",
   "dependencies": {
     "@heroicons/react": "^2.0.18",
     "@types/node": "^16.18.126",
