@@ -1,20 +1,16 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import About from './components/About';
 import Experience from './components/Experience';
 import Skills from './components/Skills';
 import Projects from './components/Projects';
 import Contact from './components/Contact';
-import AdminPanel from './components/AdminPanel';
 import './App.css';
 
-const AppContent: React.FC = () => {
-  const location = useLocation();
-  const isAdmin = location.pathname === '/admin';
-
+const App: React.FC = () => {
   return (
-    <div className="App">
-      {!isAdmin && (
+    <Router>
+      <div className="App">
         <nav className="navbar">
           <div className="container">
             <div className="nav-brand">
@@ -29,26 +25,17 @@ const AppContent: React.FC = () => {
             </div>
           </div>
         </nav>
-      )}
-      
-      <main className="main-content">
-        <Routes>
-          <Route path="/" element={<About />} />
-          <Route path="/experience" element={<Experience />} />
-          <Route path="/skills" element={<Skills />} />
-          <Route path="/projects" element={<Projects />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/admin" element={<AdminPanel />} />
-        </Routes>
-      </main>
-    </div>
-  );
-};
-
-const App: React.FC = () => {
-  return (
-    <Router>
-      <AppContent />
+        
+        <main className="main-content">
+          <Routes>
+            <Route path="/" element={<About />} />
+            <Route path="/experience" element={<Experience />} />
+            <Route path="/skills" element={<Skills />} />
+            <Route path="/projects" element={<Projects />} />
+            <Route path="/contact" element={<Contact />} />
+          </Routes>
+        </main>
+      </div>
     </Router>
   );
 };
