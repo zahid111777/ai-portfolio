@@ -9,17 +9,12 @@
       }
     },
     {
-      "src": "api/*.py",
+      "src": "api/index.py",
       "use": "@vercel/python"
     }
   ],
   "routes": [
-    { "src": "/api/health", "dest": "/api/health.py" },
-    { "src": "/api/auth/login", "dest": "/api/login.py" },
-    { "src": "/api/about/info", "dest": "/api/about.py" },
-    { "src": "/api/skills", "dest": "/api/skills.py" },
-    { "src": "/api/projects", "dest": "/api/projects.py" },
-    { "src": "/api/experience", "dest": "/api/experience.py" },
+    { "src": "/api/(.*)", "dest": "/api/index.py" },
     {
       "src": "/static/(.*)",
       "dest": "/static/$1"
