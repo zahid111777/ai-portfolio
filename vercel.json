@@ -136,8 +136,16 @@
       "dest": "/static/$1"
     },
     {
+      "src": "/admin/static/(.*)",
+      "dest": "/admin/static/$1"
+    },
+    {
+      "src": "/admin/(.*)",
+      "dest": "/admin/index.html"
+    },
+    {
       "src": "/admin",
-      "dest": "/index.html"
+      "dest": "/admin/index.html"
     },
     {
       "src": "/(.*)",
