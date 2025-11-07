@@ -1,10 +1,6 @@
 import axios from 'axios';
 
-// API Base URL - supports both development and production
-const API_BASE_URL = process.env.REACT_APP_API_URL || 
-  (process.env.NODE_ENV === 'production' 
-    ? 'https://ai-portfolio-backend.onrender.com/api'  // Update this URL after deployment
-    : 'http://localhost:8000/api');
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
 
 // Create axios instance
 const api = axios.create({

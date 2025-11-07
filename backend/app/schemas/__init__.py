@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 from typing import List, Optional
 from datetime import datetime
 
@@ -298,7 +298,7 @@ class ContactInfo(ContactInfoBase):
 
 class ContactMessageBase(BaseModel):
     name: str
-    email: EmailStr
+    email: str
     subject: Optional[str] = None
     message: str
 
