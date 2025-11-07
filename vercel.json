@@ -10,18 +10,62 @@
       }
     },
     {
-      "src": "api/index.py",
+      "src": "api/health.py",
+      "use": "@vercel/python"
+    },
+    {
+      "src": "api/about.py",
+      "use": "@vercel/python"
+    },
+    {
+      "src": "api/skills.py",
+      "use": "@vercel/python"
+    },
+    {
+      "src": "api/experience.py",
+      "use": "@vercel/python"
+    },
+    {
+      "src": "api/projects.py",
+      "use": "@vercel/python"
+    },
+    {
+      "src": "api/auth/login.py",
       "use": "@vercel/python"
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "/api/index.py"
+      "src": "/api/health",
+      "dest": "/api/health.py"
+    },
+    {
+      "src": "/api/about",
+      "dest": "/api/about.py"
+    },
+    {
+      "src": "/api/skills",
+      "dest": "/api/skills.py"
+    },
+    {
+      "src": "/api/experience",
+      "dest": "/api/experience.py"
+    },
+    {
+      "src": "/api/projects",
+      "dest": "/api/projects.py"
+    },
+    {
+      "src": "/api/auth/login",
+      "dest": "/api/auth/login.py"
     },
     {
       "src": "/static/(.*)",
       "dest": "/static/$1"
+    },
+    {
+      "src": "/admin",
+      "dest": "/index.html"
     },
     {
       "src": "/(.*)",
