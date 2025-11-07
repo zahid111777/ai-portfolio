@@ -29,6 +29,7 @@
     }
   ],
   "env": {
+    "CI": "false",
     "REACT_APP_USE_FALLBACK": "false",
     "ENVIRONMENT": "production"
   }

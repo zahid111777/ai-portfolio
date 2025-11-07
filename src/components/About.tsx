@@ -128,7 +128,7 @@ const About: React.FC = () => {
 
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
-    }, []);
+    }, [fullText]);
 
     return (
         <section className="about-section">
