@@ -17,14 +17,30 @@ import {
 // Authentication
 export const authService = {
   login: async (username: string, password: string) => {
-    const formData = new FormData();
-    formData.append('username', username);
-    formData.append('password', password);
-    
-    const response = await api.post('/token', formData);
-    const { access_token } = response.data;
-    localStorage.setItem('token', access_token);
-    return access_token;
+    try {
+      const formData = new FormData();
+      formData.append('username', username);
+      formData.append('password', password);
+      
+      console.log('Attempting login with username:', username);
+      console.log('API URL:', api.defaults.baseURL);
+      
+      const response = await api.post('/token', formData);
+      const { access_token } = response.data;
+      
+      console.log('Login successful, token received');
+      localStorage.setItem('token', access_token);
+      return access_token;
+    } catch (error: any) {
+      console.error('Login error details:', {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message,
+        url: error.config?.url,
+        method: error.config?.method
+      });
+      throw error;
+    }
   },
 
   logout: () => {
