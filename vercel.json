@@ -36,6 +36,22 @@
     {
       "src": "api/auth/login.js",
       "use": "@vercel/node"
+    },
+    {
+      "src": "api/experience.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/skills.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/projects.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/contact/info.js",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
@@ -66,6 +82,26 @@
     {
       "src": "/api/auth/login",
       "dest": "/api/auth/login.js"
+    },
+    {
+      "src": "/api/experience(.*)",
+      "dest": "/api/experience.js"
+    },
+    {
+      "src": "/api/skills(.*)",
+      "dest": "/api/skills.js"
+    },
+    {
+      "src": "/api/projects(.*)",
+      "dest": "/api/projects.js"
+    },
+    {
+      "src": "/api/contact/info",
+      "dest": "/api/contact/info.js"
+    },
+    {
+      "src": "/api/about/highlights(.*)",
+      "dest": "/api/about/highlights.js"
     },
     {
       "src": "/static/(.*)",
