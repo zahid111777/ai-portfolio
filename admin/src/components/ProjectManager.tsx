@@ -72,9 +72,9 @@ const ProjectManager: React.FC = () => {
         live_url: project.live_url || '',
         order_index: project.order_index,
         is_featured: project.is_featured,
-        technologies: project.technologies.map(t => ({ name: t.name })),
-        features: project.features.map(f => ({ description: f.description, order_index: f.order_index })),
-        metrics: project.metrics.map(m => ({ description: m.description, order_index: m.order_index }))
+        technologies: (project.technologies || []).map(t => ({ name: t.name })),
+        features: (project.features || []).map(f => ({ description: f.description, order_index: f.order_index })),
+        metrics: (project.metrics || []).map(m => ({ description: m.description, order_index: m.order_index }))
       });
       setEditingId(id);
       setShowForm(true);
@@ -444,14 +444,14 @@ const ProjectManager: React.FC = () => {
                 </div>
                 <p className="text-sm text-gray-600 mb-3 line-clamp-2">{project.description}</p>
                 <div className="flex flex-wrap gap-1 mb-3">
-                  {project.technologies.slice(0, 3).map((tech, index) => (
+                  {(project.technologies || []).slice(0, 3).map((tech, index) => (
                     <span key={index} className="px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded">
                       {tech.name}
                     </span>
                   ))}
-                  {project.technologies.length > 3 && (
+                  {(project.technologies?.length || 0) > 3 && (
                     <span className="px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded">
-                      +{project.technologies.length - 3}
+                      +{(project.technologies?.length || 0) - 3}
                     </span>
                   )}
                 </div>
