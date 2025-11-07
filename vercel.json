@@ -18,6 +18,22 @@
       "use": "@vercel/node"
     },
     {
+      "src": "api/token.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/users/me.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/about/info.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/about/highlights.js",
+      "use": "@vercel/node"
+    },
+    {
       "src": "api/auth/login.js",
       "use": "@vercel/node"
     }
@@ -30,6 +46,22 @@
     {
       "src": "/api/about",
       "dest": "/api/about.js"
+    },
+    {
+      "src": "/api/token",
+      "dest": "/api/token.js"
+    },
+    {
+      "src": "/api/users/me",
+      "dest": "/api/users/me.js"
+    },
+    {
+      "src": "/api/about/info",
+      "dest": "/api/about/info.js"
+    },
+    {
+      "src": "/api/about/highlights",
+      "dest": "/api/about/highlights.js"
     },
     {
       "src": "/api/auth/login",
