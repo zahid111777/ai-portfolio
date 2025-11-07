@@ -1,14 +1,9 @@
 {
   "version": 2,
   "name": "ai-portfolio-dynamic",
+  "buildCommand": "npm run build",
+  "outputDirectory": "build",
   "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "build"
-      }
-    },
     {
       "src": "api/health.js",
       "use": "@vercel/node"
@@ -114,10 +109,6 @@
     {
       "src": "/api/about/highlights(.*)",
       "dest": "/api/about/highlights.js"
-    },
-    {
-      "src": "/api/contact/info",
-      "dest": "/api/contact/info.js"
     },
     {
       "src": "/api/contact/messages",
