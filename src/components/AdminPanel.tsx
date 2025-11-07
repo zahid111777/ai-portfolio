@@ -64,7 +64,7 @@ const AdminPanel: React.FC = () => {
         maxWidth: '90%'
       }}>
         <h2 style={{ textAlign: 'center', marginBottom: '30px', color: '#333' }}>
-          Portfolio Admin
+          Portfolio Admin Login
         </h2>
         <form onSubmit={handleLogin}>
           <div style={{ marginBottom: '20px' }}>
