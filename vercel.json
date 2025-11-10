@@ -132,6 +132,7 @@
     }
   ],
   "env": {
+    "REACT_APP_API_URL": "/api",
     "CI": "false",
     "REACT_APP_USE_FALLBACK": "false",
     "ENVIRONMENT": "production",
