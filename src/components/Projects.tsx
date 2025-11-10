@@ -4,8 +4,10 @@ import { useAPI } from '../hooks/useAPI';
 import { fallbackProjects } from '../data/fallbackData';
 
 const Projects: React.FC = () => {
-    // Fetch projects from API with fallback data
-    const { data: projects } = useAPI(() => projectsAPI.getAll(true), fallbackProjects);
+    // Fetch projects from API with fallback data - refresh when projects change
+    const { data: projects } = useAPI(() => projectsAPI.getAll(true), fallbackProjects, {
+        refreshOn: ['projects']
+    });
 
     return (
         <section className="projects-section">

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { projectService, uploadService } from '../services';
 import { Project } from '../types';
+import { notifyPortfolioUpdate } from '../utils/dataUpdateBroadcast';
 
 const ProjectManager: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -97,6 +98,8 @@ const ProjectManager: React.FC = () => {
       await projectService.delete(id);
       setMessage({ type: 'success', text: 'Project deleted successfully!' });
       await loadProjects();
+      // Notify portfolio to refresh projects data
+      notifyPortfolioUpdate('projects');
     } catch (error: any) {
       setMessage({ type: 'error', text: 'Failed to delete project' });
     }
@@ -117,6 +120,8 @@ const ProjectManager: React.FC = () => {
       }
       resetForm();
       await loadProjects();
+      // Notify portfolio to refresh projects data
+      notifyPortfolioUpdate('projects');
     } catch (error: any) {
       setMessage({ type: 'error', text: error.response?.data?.detail || 'Failed to save project' });
     } finally {

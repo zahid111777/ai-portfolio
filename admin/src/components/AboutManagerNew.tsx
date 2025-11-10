@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { aboutService, uploadService } from '../services';
 import { AboutInfo, Highlight } from '../types';
 import { Card, CardHeader, CardBody, Button, Input, Textarea, Alert } from './ui';
+import { notifyPortfolioUpdate } from '../utils/dataUpdateBroadcast';
 
 const AboutManagerNew: React.FC = () => {
   const [aboutInfo, setAboutInfo] = useState<AboutInfo | null>(null);
@@ -83,6 +84,8 @@ const AboutManagerNew: React.FC = () => {
         setMessage({ type: 'success', text: 'Profile created successfully!' });
       }
       await loadData();
+      // Notify portfolio to refresh about data
+      notifyPortfolioUpdate('about');
     } catch (error: any) {
       setMessage({ type: 'error', text: error.response?.data?.detail || 'Failed to save profile' });
     } finally {
@@ -122,6 +125,8 @@ const AboutManagerNew: React.FC = () => {
       setShowHighlightForm(false);
       setHighlightForm({ id: null, icon: '', text: '', order_index: 0 });
       await loadData();
+      // Notify portfolio to refresh highlights data
+      notifyPortfolioUpdate('highlights');
     } catch (error: any) {
       setMessage({ type: 'error', text: error.response?.data?.detail || 'Failed to save highlight' });
     } finally {

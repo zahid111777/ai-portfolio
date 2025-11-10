@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { skillService } from '../services';
 import { Skill } from '../types';
+import { notifyPortfolioUpdate } from '../utils/dataUpdateBroadcast';
 
 const SkillManager: React.FC = () => {
   const [skills, setSkills] = useState<Skill[]>([]);
@@ -76,6 +77,8 @@ const SkillManager: React.FC = () => {
       await skillService.delete(id);
       setMessage({ type: 'success', text: 'Skill deleted successfully!' });
       await loadData();
+      // Notify portfolio to refresh skills data
+      notifyPortfolioUpdate('skills');
     } catch (error: any) {
       setMessage({ type: 'error', text: 'Failed to delete skill' });
     }
@@ -96,6 +99,8 @@ const SkillManager: React.FC = () => {
       }
       resetForm();
       await loadData();
+      // Notify portfolio to refresh skills data
+      notifyPortfolioUpdate('skills');
     } catch (error: any) {
       setMessage({ type: 'error', text: error.response?.data?.detail || 'Failed to save skill' });
     } finally {

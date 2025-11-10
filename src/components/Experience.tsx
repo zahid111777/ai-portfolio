@@ -4,8 +4,10 @@ import { useAPI } from '../hooks/useAPI';
 import { fallbackExperiences } from '../data/fallbackData';
 
 const Experience: React.FC = () => {
-    // Fetch experiences from API with fallback data
-    const { data: experiences } = useAPI(() => experienceAPI.getAll(), fallbackExperiences);
+    // Fetch experiences from API with fallback data - refresh when experiences change
+    const { data: experiences } = useAPI(() => experienceAPI.getAll(), fallbackExperiences, {
+        refreshOn: ['experiences']
+    });
 
     return (
         <section className="experience-section">

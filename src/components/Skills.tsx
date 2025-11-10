@@ -4,9 +4,13 @@ import { useAPI } from '../hooks/useAPI';
 import { fallbackSkillCategories, fallbackSpecializations } from '../data/fallbackData';
 
 const Skills: React.FC = () => {
-    // Fetch skills from API with fallback data
-    const { data: skillCategories } = useAPI(() => skillsAPI.getAll(), fallbackSkillCategories);
-    const { data: specializations } = useAPI(() => skillsAPI.getCategories(), fallbackSpecializations);
+    // Fetch skills from API with fallback data - refresh when skills change
+    const { data: skillCategories } = useAPI(() => skillsAPI.getAll(), fallbackSkillCategories, {
+        refreshOn: ['skills']
+    });
+    const { data: specializations } = useAPI(() => skillsAPI.getCategories(), fallbackSpecializations, {
+        refreshOn: ['skills']
+    });
 
     return (
         <section className="skills-section">

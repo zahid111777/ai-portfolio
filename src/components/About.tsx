@@ -9,9 +9,13 @@ const About: React.FC = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [typedText, setTypedText] = useState('');
     
-    // Fetch data from API with fallbacks
-    const { data: aboutInfo } = useAPI(() => aboutAPI.getInfo(), fallbackAboutInfo);
-    const { data: highlights } = useAPI(() => aboutAPI.getHighlights(), fallbackHighlights);
+    // Fetch data from API with fallbacks - refresh when about data changes
+    const { data: aboutInfo } = useAPI(() => aboutAPI.getInfo(), fallbackAboutInfo, {
+        refreshOn: ['about', 'highlights']
+    });
+    const { data: highlights } = useAPI(() => aboutAPI.getHighlights(), fallbackHighlights, {
+        refreshOn: ['about', 'highlights']
+    });
     
     const fullText = aboutInfo.title;
 

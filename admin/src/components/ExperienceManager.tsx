@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { experienceService } from '../services';
 import { Experience } from '../types';
+import { notifyPortfolioUpdate } from '../utils/dataUpdateBroadcast';
 
 const ExperienceManager: React.FC = () => {
   const [experiences, setExperiences] = useState<Experience[]>([]);
@@ -90,6 +91,8 @@ const ExperienceManager: React.FC = () => {
       await experienceService.delete(id);
       setMessage({ type: 'success', text: 'Experience deleted successfully!' });
       await loadExperiences();
+      // Notify portfolio to refresh experiences data
+      notifyPortfolioUpdate('experiences');
     } catch (error: any) {
       setMessage({ type: 'error', text: 'Failed to delete experience' });
     }
@@ -110,6 +113,8 @@ const ExperienceManager: React.FC = () => {
       }
       resetForm();
       await loadExperiences();
+      // Notify portfolio to refresh experiences data
+      notifyPortfolioUpdate('experiences');
     } catch (error: any) {
       setMessage({ type: 'error', text: error.response?.data?.detail || 'Failed to save experience' });
     } finally {

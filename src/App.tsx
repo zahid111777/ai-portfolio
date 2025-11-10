@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { DataUpdateProvider } from './contexts/DataUpdateContext';
 import About from './components/About';
 import Experience from './components/Experience';
 import Skills from './components/Skills';
@@ -9,8 +10,9 @@ import './App.css';
 
 const App: React.FC = () => {
   return (
-    <Router>
-      <div className="App">
+    <DataUpdateProvider>
+      <Router>
+        <div className="App">
         <nav className="navbar">
           <div className="container">
             <div className="nav-brand">
@@ -37,6 +39,7 @@ const App: React.FC = () => {
         </main>
       </div>
     </Router>
+    </DataUpdateProvider>
   );
 };
 
