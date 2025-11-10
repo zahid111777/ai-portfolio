@@ -8,11 +8,8 @@ import {
   fallbackSpecializations
 } from '../data/fallbackData';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || (
-  process.env.NODE_ENV === 'production' 
-    ? '/api' 
-    : 'http://localhost:8000/api'
-);
+const API_BASE_URL = process.env.REACT_APP_API_URL || 
+  (typeof window !== 'undefined' && !window.location.hostname.includes('localhost') ? '/api' : 'http://localhost:8000/api');
 const USE_FALLBACK = process.env.REACT_APP_USE_FALLBACK === 'true' || false;
 
 // Simple fetch wrapper for API calls with fallback support
