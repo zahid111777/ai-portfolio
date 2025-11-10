@@ -3,6 +3,10 @@
   "name": "ai-portfolio-dynamic",
   "buildCommand": "npm run build",
   "outputDirectory": "build",
+  "buildEnv": {
+    "REACT_APP_API_URL": "/api",
+    "REACT_APP_USE_FALLBACK": "false"
+  },
   "builds": [
     {
       "src": "api/health.js",
