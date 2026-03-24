@@ -3,6 +3,7 @@
   "name": "ai-portfolio-dynamic",
   "buildCommand": "npm run build",
   "outputDirectory": "build",
+  "public": "build",
   "builds": [
     {
       "src": "api/health.js",
