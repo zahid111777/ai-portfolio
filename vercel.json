@@ -47,14 +47,6 @@
     {
       "src": "api/contact/messages.js",
       "use": "@vercel/node"
-    },
-    {
-      "src": "api/skills/categories.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "api/skills/grouped.js",
-      "use": "@vercel/node"
     }
   ],
   "routes": [
@@ -105,14 +97,6 @@
     {
       "src": "/api/contact/messages",
       "dest": "/api/contact/messages.js"
-    },
-    {
-      "src": "/api/skills/categories",
-      "dest": "/api/skills/categories.js"
-    },
-    {
-      "src": "/api/skills/grouped",
-      "dest": "/api/skills/grouped.js"
     },
     {
       "src": "/static/(.*)",
