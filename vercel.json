@@ -2,7 +2,7 @@
   "version": 2,
   "name": "ai-portfolio",
   "framework": "create-react-app",
-  "buildCommand": "npm run build",
+  "buildCommand": "npm run build && cd admin && npm install && npm run build && cd .. && node scripts/combine-builds.js",
   "outputDirectory": "build",
   "rewrites": [
     { "source": "/((?!api/).*)", "destination": "/index.html" }

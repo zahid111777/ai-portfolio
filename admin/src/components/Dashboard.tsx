@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
-import AboutManagerNew from './AboutManagerNew';
+import AboutManager from './AboutManager';
 import ExperienceManager from './ExperienceManager';
 import ProjectManager from './ProjectManager';
 import SkillManager from './SkillManager';
@@ -153,7 +153,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
           <div className="py-6">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
               <Routes>
-                <Route path="/" element={<AboutManagerNew />} />
+                <Route path="/" element={<AboutManager />} />
                 <Route path="/experience" element={<ExperienceManager />} />
                 <Route path="/projects" element={<ProjectManager />} />
                 <Route path="/skills" element={<SkillManager />} />
