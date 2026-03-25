@@ -1,45 +1,15 @@
 {
-  "name": "portfolio-admin",
   "version": 2,
+  "name": "my-portfolio",
+  "framework": "create-react-app",
   "buildCommand": "npm run build",
   "outputDirectory": "build",
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "build"
-      }
-    },
-    {
-      "src": "api/token.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "api/users/me.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/token",
-      "dest": "/api/token.js"
-    },
-    {
-      "src": "/api/users/me",
-      "dest": "/api/users/me.js"
-    },
-    {
-      "src": "/static/(.*)",
-      "dest": "/static/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
+  "rewrites": [
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
   ],
   "env": {
     "CI": "false",
+    "REACT_APP_API_URL": "/api",
     "REACT_APP_USE_FALLBACK": "false"
   }
 }
