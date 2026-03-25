@@ -17,8 +17,6 @@ export const useAPI = <T>(
   const [data, setData] = useState<T>(fallbackData);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [_refreshCount, setRefreshCount] = useState(0);
-  
   const { onDataChange } = useDataUpdate();
   const memoizedApiCall = useCallback(apiCall, [apiCall]);
 
@@ -58,7 +56,6 @@ export const useAPI = <T>(
       
       if (shouldRefresh) {
         console.log(`[useAPI] Refreshing data due to ${changeType} change`);
-        setRefreshCount(prev => prev + 1);
         fetchData();
       }
     });
