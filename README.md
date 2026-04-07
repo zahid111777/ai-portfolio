@@ -62,7 +62,6 @@ npm start
 - **Portfolio**: http://localhost:3000
 - **Admin Panel**: http://localhost:3001
 - **API Docs**: http://localhost:8000/api/docs
-- **Admin Login**: `zahid` / `zahid@786`
 
 ## 📁 Project Structure
 
