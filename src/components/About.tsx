@@ -136,13 +136,13 @@ const About: React.FC = () => {
 
     return (
         <section className="about-section">
-            <canvas ref={canvasRef} className="particle-canvas" />
+            <canvas ref={canvasRef} className="particle-canvas" aria-hidden="true" />
             
             <div className="container">
                 <div className="hero-container">
                     <div className="hero-content">
                     <div className="greeting">
-                        <span className="wave">👋</span>
+                        <span className="wave" aria-hidden="true">👋</span>
                         <span className="hello-text">Hello, I'm</span>
                     </div>
                     
@@ -164,7 +164,7 @@ const About: React.FC = () => {
                     <div className="highlights">
                         {highlights.map((highlight: any) => (
                             <div key={highlight.id} className="highlight-item">
-                                <div className="highlight-icon">{highlight.icon}</div>
+                                <div className="highlight-icon" aria-hidden="true">{highlight.icon}</div>
                                 <span>{highlight.text}</span>
                             </div>
                         ))}
@@ -212,7 +212,7 @@ const About: React.FC = () => {
                             <div className="photo-glow"></div>
                         </div>
                         
-                        <div className="floating-elements">
+                        <div className="floating-elements" aria-hidden="true">
                             <div className="float-element ai-badge">
                                 <span>AI</span>
                             </div>
@@ -230,7 +230,7 @@ const About: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="code-rain">
+                        <div className="code-rain" aria-hidden="true">
                             <div className="code-line">import tensorflow as tf</div>
                             <div className="code-line">model = Sequential()</div>
                             <div className="code-line">model.compile(optimizer='adam')</div>
@@ -238,7 +238,7 @@ const About: React.FC = () => {
                             <div className="code-line">predictions = model.predict(X_test)</div>
                         </div>
 
-                        <div className="neural-network">
+                        <div className="neural-network" aria-hidden="true">
                             <div className="layer input-layer">
                                 <div className="neuron"></div>
                                 <div className="neuron"></div>
@@ -277,7 +277,7 @@ const About: React.FC = () => {
             </div>
             </div>
             
-            <div className="scroll-indicator">
+            <div className="scroll-indicator" aria-hidden="true">
                 <div className="scroll-text">Scroll to explore</div>
                 <div className="scroll-arrow">
                     <svg viewBox="0 0 24 24" fill="none">
@@ -288,7 +288,7 @@ const About: React.FC = () => {
             </div>
 
             {/* Floating Background Elements */}
-            <div className="background-shapes">
+            <div className="background-shapes" aria-hidden="true">
                 <div className="shape shape1"></div>
                 <div className="shape shape2"></div>
                 <div className="shape shape3"></div>

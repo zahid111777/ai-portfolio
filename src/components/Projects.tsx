@@ -10,6 +10,7 @@ const LANGUAGE_COLORS: Record<string, string> = {
     TypeScript: '#2b7489',
     HTML: '#e34c26',
     CSS: '#563d7c',
+    JupyterNotebook:'red'
 };
 
 interface GitHubRepo {
@@ -67,10 +68,12 @@ const Projects: React.FC = () => {
                     Open-source projects live on GitHub — from AI agents and LLM tools to full-stack apps.
                 </p>
 
-                <div className="project-filters">
+                <div className="project-filters" role="group" aria-label="Filter projects by language">
                     {FILTER_CATEGORIES.map(cat => (
                         <button
                             key={cat}
+                            type="button"
+                            aria-pressed={filter === cat}
                             className={`filter-btn${filter === cat ? ' active' : ''}`}
                             onClick={() => setFilter(cat)}
                         >
@@ -80,7 +83,7 @@ const Projects: React.FC = () => {
                 </div>
 
                 {loading ? (
-                    <div className="projects-loading">
+                    <div className="projects-loading" role="status">
                         <div className="loading-spinner"></div>
                         <p>Fetching projects from GitHub...</p>
                     </div>
@@ -89,14 +92,24 @@ const Projects: React.FC = () => {
                         <div className="projects-grid-github">
                             {displayRepos.map(repo => {
                                 const langColor = LANGUAGE_COLORS[repo.language || ''] || '#444';
+                                // GitHub's language colours are tuned for light UIs; used as-is on
+                                // the dark tag background they drop as low as 1.2:1. Mixing toward
+                                // white keeps the per-language hue while meeting WCAG AA. Browsers
+                                // without color-mix() simply inherit .tech-tag's default colour.
+                                const readableLang = `color-mix(in srgb, ${langColor} 35%, #ffffff)`;
                                 const displayName = repo.name.replace(/[-_]/g, ' ');
                                 return (
                                     <div key={repo.id} className="project-card-github">
                                         <div
                                             className="project-lang-banner"
-                                            style={{ background: `linear-gradient(135deg, ${langColor}cc, ${langColor}55)` }}
+                                            style={{
+                                                // The scrim keeps the per-language hue while guaranteeing the
+                                                // white label stays readable. Without it, white on the
+                                                // JavaScript yellow measures 1.8:1 and HTML orange 4.3:1.
+                                                background: `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), linear-gradient(135deg, ${langColor}cc, ${langColor}55)`,
+                                            }}
                                         >
-                                            <span className="project-lang-icon">
+                                            <span className="project-lang-icon" aria-hidden="true">
                                                 {repo.language === 'Python' && '🐍'}
                                                 {repo.language === 'JavaScript' && '⚡'}
                                                 {repo.language === 'TypeScript' && '🔷'}
@@ -119,7 +132,7 @@ const Projects: React.FC = () => {
 
                                             <div className="project-technologies">
                                                 {repo.language && (
-                                                    <span className="tech-tag" style={{ borderColor: langColor, color: langColor }}>
+                                                    <span className="tech-tag" style={{ borderColor: readableLang, color: readableLang }}>
                                                         {repo.language}
                                                     </span>
                                                 )}

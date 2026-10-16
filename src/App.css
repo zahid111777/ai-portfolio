@@ -5,15 +5,87 @@
   box-sizing: border-box;
 }
 
+/*
+ * Responsive design tokens.
+ * --nav-h is the space reserved for the fixed navbar. It only has to be
+ * accurate while the navbar is `position: fixed` (>=769px, where its height
+ * is a stable 80px); on phones the navbar becomes `position: sticky` and
+ * --nav-h drops to 0 because the element then occupies real layout space.
+ * --gutter is the horizontal page gutter, shrinking on small screens.
+ */
+:root {
+  --nav-h: 80px;
+  --gutter: 2rem;
+}
+
+html {
+  /* Stop iOS inflating text when a phone is rotated to landscape. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   line-height: 1.6;
   color: #333;
   background-color: #0a0a0a;
+  /* Safety net: decorative absolute elements must never create a page scrollbar. */
+  overflow-x: hidden;
+}
+
+/*
+ * `clip` behaves like `hidden` but does NOT create a scroll container, which
+ * is what lets the sticky mobile navbar keep working. Older engines fall back
+ * to the `hidden` rule above.
+ */
+@supports (overflow-x: clip) {
+  body {
+    overflow-x: clip;
+  }
+}
+
+/* Media never overflows its container. */
+img,
+canvas,
+video {
+  max-width: 100%;
+}
+
+img {
+  height: auto;
 }
 
 .App {
   min-height: 100vh;
+}
+
+/* Visible keyboard focus for every interactive element. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid #00d4ff;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Respect users who ask for less motion: this page is animation-heavy. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .particle-canvas,
+  .code-rain,
+  .background-shapes,
+  .scroll-indicator {
+    display: none;
+  }
 }
 
 /* Navigation */
@@ -32,6 +104,8 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .nav-brand {
@@ -45,11 +119,17 @@ body {
   font-weight: 700;
   color: #00d4ff;
   text-decoration: none;
+  /* 44px minimum touch target. */
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
 }
 
 .nav-links {
   display: flex;
   gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .nav-links a {
@@ -58,6 +138,10 @@ body {
   font-weight: 500;
   transition: color 0.3s ease;
   position: relative;
+  /* Touch-friendly target without changing the visual rhythm. */
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
 }
 
 .nav-links a:hover {
@@ -80,29 +164,35 @@ body {
 }
 
 .main-content {
-  padding-top: 80px;
+  padding-top: var(--nav-h);
 }
 
 /* Container */
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 var(--gutter);
+  width: 100%;
 }
 
-/* About Section Container Override */
+/*
+ * About Section Container Override
+ * Was a flat `padding: 150px`, which left only ~20px of content width on a
+ * 320px screen. Now the padding scales with the viewport and the hero is
+ * capped so it does not stretch edge-to-edge on ultrawide displays.
+ */
 .about-section .container {
-  padding: 150px;
-  max-width: none;
+  padding: clamp(2rem, 8vw, 150px) var(--gutter);
+  max-width: 1600px;
   width: 100%;
 }
 
 /* Section Titles */
 .section-title {
-  font-size: 3rem;
+  font-size: clamp(1.75rem, 1.15rem + 3vw, 3rem);
   font-weight: 700;
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: clamp(2rem, 5vw, 3rem);
   background: linear-gradient(135deg, #00d4ff, #ff006b);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -111,7 +201,9 @@ body {
 
 /* About Section */
 .about-section {
-  min-height: 100vh;
+  min-height: calc(100vh - var(--nav-h));
+  /* svh avoids the mobile browser URL-bar height jump. */
+  min-height: calc(100svh - var(--nav-h));
   display: flex;
   align-items: center;
   background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
@@ -123,7 +215,7 @@ body {
 .hero-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 4rem;
+  gap: clamp(2rem, 4vw, 4rem);
   align-items: center;
   z-index: 2;
   position: relative;
@@ -154,7 +246,7 @@ body {
 }
 
 .name {
-  font-size: 4rem;
+  font-size: clamp(2.25rem, 1.3rem + 4.75vw, 4rem);
   font-weight: 800;
   margin-bottom: 1rem;
   background: linear-gradient(135deg, #00d4ff, #ff006b, #00ff88);
@@ -190,7 +282,7 @@ body {
 }
 
 .title {
-  font-size: 1.8rem;
+  font-size: clamp(1.15rem, 0.85rem + 1.5vw, 1.8rem);
   color: #ccc;
   margin-bottom: 2rem;
   line-height: 1.4;
@@ -218,10 +310,12 @@ body {
 }
 
 .description {
-  font-size: 1.1rem;
+  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.1rem);
   line-height: 1.8;
   margin-bottom: 2rem;
   color: #ccc;
+  /* Long words/URLs must not punch out of the layout. */
+  overflow-wrap: break-word;
 }
 
 .description strong {
@@ -269,13 +363,14 @@ body {
 .hero-stats {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
-  margin: 3rem 0;
+  gap: clamp(0.75rem, 2vw, 2rem);
+  margin: clamp(2rem, 5vw, 3rem) 0;
 }
 
 .stat {
   text-align: center;
-  padding: 1.5rem;
+  padding: clamp(0.85rem, 2.5vw, 1.5rem);
+  min-width: 0;
   background: rgba(255, 255, 255, 0.03);
   border-radius: 20px;
   border: 1px solid rgba(0, 212, 255, 0.2);
@@ -307,7 +402,7 @@ body {
 
 .stat-number {
   display: block;
-  font-size: 2.2rem;
+  font-size: clamp(1.5rem, 1.1rem + 2vw, 2.2rem);
   font-weight: 700;
   background: linear-gradient(135deg, #00d4ff, #ff006b);
   -webkit-background-clip: text;
@@ -344,8 +439,14 @@ body {
   gap: 0.5rem;
   position: relative;
   overflow: hidden;
-  width: 180px;
-  height: 50px;
+  /*
+   * Was a fixed `width: 180px`, which clipped longer labels via the ellipsis
+   * on .btn-text. min-width keeps the matched button sizing of the design
+   * while letting the label decide the real width.
+   */
+  min-width: 180px;
+  max-width: 100%;
+  min-height: 50px;
   box-sizing: border-box;
   white-space: nowrap;
   flex-shrink: 0;
@@ -410,10 +511,24 @@ body {
   position: relative;
 }
 
+/*
+ * The hero portrait is now driven by one fluid value. Previously
+ * .profile-container shrank at breakpoints but .profile-photo stayed a fixed
+ * 350px (the media queries targeted .profile-image, a class that is not in the
+ * markup), so the photo overflowed its own container on every phone.
+ * Sizing the photo as a percentage keeps the 350/450 ratio at every width.
+ */
 .profile-container {
   position: relative;
-  width: 450px;
-  height: 450px;
+  /*
+   * 80% leaves room for the orbiting rings. The outermost (.ring3) is 160% of
+   * .profile-photo, which is 78% of this box, so it renders at 1.248x this
+   * width — at 80% of the column that lands just inside the column edge at
+   * every breakpoint, instead of being sheared off by the section's
+   * overflow:hidden.
+   */
+  width: min(450px, 80%);
+  aspect-ratio: 1;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -421,8 +536,8 @@ body {
 
 .profile-photo {
   position: relative;
-  width: 350px;
-  height: 350px;
+  width: 78%;
+  height: 78%;
   z-index: 5;
 }
 
@@ -834,20 +949,27 @@ body {
 
 /* Experience Section */
 .experience-section {
-  padding: 5rem 0;
+  padding: clamp(3rem, 8vw, 5rem) 0;
   background: #111;
   color: white;
 }
 
+/*
+ * Timeline indentation is fluid: at 320px the old fixed 2rem + 3rem stole
+ * 80px of an already narrow column. The marker is now derived from the line
+ * position, so the two stay concentric at every width.
+ */
 .timeline {
+  --timeline-pad: clamp(1rem, 4vw, 2rem);
+  --timeline-line-x: clamp(0.5rem, 2vw, 1rem);
   position: relative;
-  padding-left: 2rem;
+  padding-left: var(--timeline-pad);
 }
 
 .timeline::before {
   content: '';
   position: absolute;
-  left: 1rem;
+  left: var(--timeline-line-x);
   top: 0;
   bottom: 0;
   width: 2px;
@@ -856,13 +978,15 @@ body {
 
 .timeline-item {
   position: relative;
-  margin-bottom: 3rem;
-  padding-left: 3rem;
+  margin-bottom: clamp(2rem, 5vw, 3rem);
+  padding-left: clamp(1.25rem, 4vw, 3rem);
+  min-width: 0;
 }
 
 .timeline-marker {
   position: absolute;
-  left: -2.5rem;
+  /* 11px = half the marker's 22px border-box; +1px centres on the 2px line. */
+  left: calc(var(--timeline-line-x) - var(--timeline-pad) + 1px - 11px);
   top: 1rem;
   width: 1rem;
   height: 1rem;
@@ -874,20 +998,24 @@ body {
 .timeline-content {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 20px;
-  padding: 2rem;
+  padding: clamp(1.1rem, 3vw, 2rem);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 
 .job-title {
-  font-size: 1.5rem;
+  font-size: clamp(1.2rem, 1rem + 1vw, 1.5rem);
   font-weight: 700;
   color: #00d4ff;
   margin-bottom: 0.5rem;
 }
 
+/* Company / location / type sat on one non-wrapping row and overflowed. */
 .company-info {
   display: flex;
-  gap: 1rem;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
   margin-bottom: 1rem;
 }
 
@@ -897,7 +1025,11 @@ body {
 }
 
 .duration {
-  color: #ff006b;
+  /*
+   * Brand #ff006b measures 4.39:1 on the timeline card — just under AA for
+   * body text. This lighter tint of the same hue reaches 5.4:1.
+   */
+  color: #ff4d8f;
   font-weight: 600;
 }
 
@@ -943,27 +1075,32 @@ body {
 
 /* Skills Section */
 .skills-section {
-  padding: 5rem 0;
+  padding: clamp(3rem, 8vw, 5rem) 0;
   background: #0a0a0a;
   color: white;
 }
 
+/*
+ * `min(100%, 300px)` is the key: a bare minmax(300px, 1fr) track cannot shrink
+ * below 300px, so it overflowed any container narrower than that.
+ */
 .skills-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-bottom: 4rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: clamp(1rem, 3vw, 2rem);
+  margin-bottom: clamp(2.5rem, 6vw, 4rem);
 }
 
 .skill-category {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 20px;
-  padding: 2rem;
+  padding: clamp(1.1rem, 3vw, 2rem);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  min-width: 0;
 }
 
 .category-title {
-  font-size: 1.3rem;
+  font-size: clamp(1.1rem, 1rem + 0.5vw, 1.3rem);
   font-weight: 700;
   color: #00d4ff;
   margin-bottom: 1.5rem;
@@ -976,17 +1113,22 @@ body {
 .skill-info {
   display: flex;
   justify-content: space-between;
+  align-items: baseline;
+  gap: 0.75rem;
   margin-bottom: 0.5rem;
 }
 
 .skill-name {
   color: #fff;
   font-weight: 500;
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 
 .skill-level {
   color: #aaa;
   font-size: 0.9rem;
+  flex-shrink: 0;
 }
 
 .skill-bar {
@@ -1003,7 +1145,7 @@ body {
 }
 
 .specializations-title {
-  font-size: 2rem;
+  font-size: clamp(1.4rem, 1.1rem + 1.5vw, 2rem);
   font-weight: 700;
   text-align: center;
   margin-bottom: 2rem;
@@ -1012,7 +1154,7 @@ body {
 
 .specializations-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
   gap: 1rem;
 }
 
@@ -1020,9 +1162,11 @@ body {
   background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(255, 0, 107, 0.1));
   border: 1px solid rgba(0, 212, 255, 0.3);
   border-radius: 15px;
-  padding: 1.5rem;
+  padding: clamp(1rem, 3vw, 1.5rem);
   text-align: center;
   transition: transform 0.3s ease;
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 
 .specialization-card:hover {
@@ -1036,7 +1180,7 @@ body {
 
 /* Projects Section */
 .projects-section {
-  padding: 5rem 0;
+  padding: clamp(3rem, 8vw, 5rem) 0;
   background: #111;
   color: white;
 }
@@ -1070,6 +1214,11 @@ body {
   cursor: pointer;
   transition: all 0.25s ease;
   font-family: inherit;
+  /* 44px minimum touch target (was ~32px). */
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .filter-btn:hover {
@@ -1085,11 +1234,11 @@ body {
   font-weight: 600;
 }
 
-/* GitHub-style project grid — 3 columns */
+/* GitHub-style project grid — 3 columns on desktop, auto-collapsing below */
 .projects-grid-github {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 1.75rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+  gap: clamp(1rem, 2.5vw, 1.75rem);
 }
 
 /* Card */
@@ -1101,6 +1250,7 @@ body {
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .project-card-github:hover {
@@ -1126,17 +1276,19 @@ body {
 .project-lang-label {
   font-size: 0.85rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.85);
+  /* Full white (with the banner scrim) keeps every language at >=5:1. */
+  color: #fff;
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
 /* Card body */
 .project-card-body {
-  padding: 1.5rem;
+  padding: clamp(1.1rem, 3vw, 1.5rem);
   display: flex;
   flex-direction: column;
   flex: 1;
+  min-width: 0;
 }
 
 .project-title {
@@ -1146,6 +1298,8 @@ body {
   margin-bottom: 0.6rem;
   text-transform: capitalize;
   line-height: 1.3;
+  /* Repo names like "ai-portfolio-dashboard" must wrap, not overflow. */
+  overflow-wrap: break-word;
 }
 
 .project-description {
@@ -1154,6 +1308,7 @@ body {
   line-height: 1.6;
   margin-bottom: 1rem;
   flex: 1;
+  overflow-wrap: break-word;
 }
 
 .project-stats {
@@ -1182,8 +1337,12 @@ body {
 }
 
 .project-link-btn {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 0.45rem 1rem;
+  /* 44px minimum touch target (was ~31px). */
+  min-height: 44px;
   border-radius: 8px;
   font-size: 0.85rem;
   font-weight: 600;
@@ -1240,14 +1399,15 @@ body {
 
 .github-cta-btn {
   display: inline-block;
-  padding: 0.9rem 2.2rem;
+  padding: 0.9rem clamp(1.25rem, 5vw, 2.2rem);
   border-radius: 40px;
-  font-size: 1rem;
+  font-size: clamp(0.9rem, 0.85rem + 0.25vw, 1rem);
   font-weight: 600;
   text-decoration: none;
   border: 2px solid #00d4ff;
   color: #00d4ff;
   transition: background 0.3s ease, color 0.3s ease;
+  max-width: 100%;
 }
 
 .github-cta-btn:hover {
@@ -1257,7 +1417,7 @@ body {
 
 /* Contact Section */
 .contact-section {
-  padding: 5rem 0;
+  padding: clamp(3rem, 8vw, 5rem) 0;
   background: #0a0a0a;
   color: white;
 }
@@ -1265,11 +1425,15 @@ body {
 .contact-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 4rem;
+  gap: clamp(2rem, 5vw, 4rem);
+}
+
+.contact-info {
+  min-width: 0;
 }
 
 .contact-info h3 {
-  font-size: 2rem;
+  font-size: clamp(1.4rem, 1.1rem + 1.5vw, 2rem);
   margin-bottom: 1rem;
   color: #00d4ff;
 }
@@ -1286,7 +1450,10 @@ body {
 
 .contact-item {
   display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
   margin-bottom: 1rem;
+  min-width: 0;
 }
 
 .contact-label {
@@ -1294,15 +1461,26 @@ body {
   margin-right: 1rem;
   color: #fff;
   min-width: 80px;
+  flex-shrink: 0;
 }
 
+/*
+ * The LinkedIn vanity URL is one long unbreakable token — force it to wrap.
+ * Vertical padding (rather than inline-flex + min-height) grows the touch
+ * target to ~44px while keeping the link inline, so long values still wrap
+ * across lines instead of becoming one unbreakable atomic box.
+ */
 .contact-item a {
   color: #00d4ff;
   text-decoration: none;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  padding-block: 0.6rem;
 }
 
 .social-links {
   display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
 }
 
@@ -1313,6 +1491,10 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 20px;
   transition: all 0.3s ease;
+  /* 44px minimum touch target. */
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
 }
 
 .social-link:hover {
@@ -1322,9 +1504,10 @@ body {
 
 .contact-form {
   background: rgba(255, 255, 255, 0.05);
-  padding: 2rem;
+  padding: clamp(1.1rem, 3vw, 2rem);
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  min-width: 0;
 }
 
 .form-group {
@@ -1339,7 +1522,15 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 10px;
   color: white;
+  /* Must stay >=16px or iOS Safari zooms in on focus. */
   font-size: 1rem;
+  font-family: inherit;
+  max-width: 100%;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 8rem;
 }
 
 .form-group input::placeholder,
@@ -1350,152 +1541,276 @@ body {
 .submit-btn {
   width: 100%;
   padding: 1rem;
+  min-height: 48px;
   background: linear-gradient(135deg, #00d4ff, #ff006b);
   border: none;
   border-radius: 10px;
   color: white;
   font-size: 1rem;
+  font-family: inherit;
   font-weight: 600;
   cursor: pointer;
   transition: transform 0.3s ease;
+}
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/*
+ * Contact form status message. Contact.tsx renders .alert/.alert-success/
+ * .alert-error but no styles existed, so the text inherited body's #333 and
+ * was effectively invisible against the #0a0a0a background.
+ */
+.alert {
+  padding: 0.9rem 1rem;
+  border-radius: 10px;
+  margin-bottom: 1.25rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  border: 1px solid transparent;
+  overflow-wrap: break-word;
+}
+
+.alert-success {
+  background: rgba(0, 255, 148, 0.1);
+  border-color: rgba(0, 255, 148, 0.4);
+  color: #7dffc4;
+}
+
+.alert-error {
+  background: rgba(255, 0, 107, 0.1);
+  border-color: rgba(255, 0, 107, 0.45);
+  color: #ff9ec2;
 }
 
 .submit-btn:hover {
   transform: translateY(-2px);
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .navbar {
-    padding: 1rem;
-    flex-direction: column;
-    gap: 1rem;
+/* ============================================================
+   Responsive Design
+
+   Type, spacing and the portrait are handled by clamp()/min() in the base
+   rules above, so these breakpoints only carry genuine *layout* changes
+   (column counts, stacking, decorative elements). Sizes are deliberately not
+   repeated here — that is what kept the old .profile-image overrides alive
+   long after the markup had moved to .profile-photo.
+   ============================================================ */
+
+/* --- Laptop and below: pull the hero's oversized padding in --- */
+@media (max-width: 1200px) {
+  .about-section .container {
+    padding: clamp(2rem, 6vw, 5rem) var(--gutter);
   }
-  
-  .nav-links {
-    gap: 1rem;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  
-  .hero-container {
-    grid-template-columns: 1fr;
-    text-align: center;
-    gap: 2rem;
-  }
-  
-  .name {
-    font-size: 2.5rem;
-  }
-  
-  .title {
-    font-size: 1.4rem;
-  }
-  
-  .hero-stats {
-    justify-content: center;
-    gap: 1rem;
-  }
-  
-  .stat {
-    padding: 1rem 0.5rem;
-    min-width: 80px;
-  }
-  
-  .profile-container {
-    width: 300px;
-    height: 300px;
-  }
-  
-  .profile-image {
-    width: 220px;
-    height: 220px;
-  }
-  
-  .floating-icon {
-    width: 45px;
-    height: 45px;
-    font-size: 1.2rem;
-  }
-  
-  .highlights {
-    align-items: center;
-  }
-  
-  .highlight-item {
-    max-width: 300px;
-  }
-  
-  .cta-buttons {
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .btn-primary, .btn-secondary {
-    width: 200px;
-    justify-content: center;
-  }
-  
-  .skills-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .projects-grid-github {
-    grid-template-columns: 1fr;
+}
+
+/* --- Tablet landscape: hero still side-by-side but tighter --- */
+@media (max-width: 1024px) {
+  :root {
+    --gutter: 1.5rem;
   }
 
-  .project-filters {
-    gap: 0.5rem;
-  }
-  
-  .contact-content {
-    grid-template-columns: 1fr;
-  }
-  
-  .section-title {
-    font-size: 2rem;
-  }
-  
-  .code-snippet {
-    font-size: 0.7rem;
-    padding: 0.3rem 0.5rem;
-  }
-  
-  .floating-shape {
+  .neural-network {
     display: none;
   }
 }
 
-@media (max-width: 480px) {
+/* --- Tablet portrait / stacked hero --- */
+@media (max-width: 968px) {
   .hero-container {
-    padding: 1rem;
+    grid-template-columns: 1fr;
+    text-align: center;
   }
-  
+
+  /*
+   * .greeting and .name are flex containers, so the inherited text-align
+   * alone does not centre them.
+   */
+  .greeting {
+    justify-content: center;
+  }
+
   .name {
-    font-size: 2rem;
+    align-items: center;
   }
-  
-  .title {
-    font-size: 1.2rem;
+
+  .highlights {
+    align-items: center;
   }
-  
-  .profile-container {
-    width: 250px;
-    height: 250px;
+
+  .highlight-item {
+    width: 100%;
+    max-width: 420px;
   }
-  
-  .profile-image {
-    width: 180px;
-    height: 180px;
-  }
-  
+
   .hero-stats {
-    grid-template-columns: repeat(2, 1fr);
+    max-width: 480px;
+    margin-inline: auto;
+  }
+
+  .cta-buttons {
+    justify-content: center;
+  }
+
+  /* Badges hang outside the portrait; keep them inside the viewport. */
+  .ai-badge,
+  .dl-badge {
+    right: 0;
+  }
+
+  .ml-badge {
+    right: -4%;
+  }
+
+  .cv-badge {
+    left: 0;
+  }
+
+  .nlp-badge {
+    left: -4%;
+  }
+}
+
+/* --- Phones / small tablets --- */
+@media (max-width: 768px) {
+  :root {
+    /*
+     * On phones the brand and links stack, and the link row itself may wrap,
+     * so the navbar has no predictable height. Rather than guess an offset,
+     * the navbar switches from `fixed` to `sticky`: it still pins to the top
+     * but now occupies real layout space, so no padding compensation is
+     * needed and content can never hide underneath it.
+     */
+    --nav-h: 0px;
+    --gutter: 1rem;
+  }
+
+  .navbar {
+    position: sticky;
+    top: 0;
+  }
+
+  .navbar .container {
+    flex-direction: column;
+    justify-content: center;
     gap: 0.5rem;
   }
-  
+
+  .nav-links {
+    gap: 0.5rem 1.25rem;
+  }
+
+  .contact-content {
+    grid-template-columns: 1fr;
+  }
+
+  .code-snippet {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.5rem;
+  }
+
+  .floating-shape,
+  .code-rain,
+  .scroll-indicator {
+    display: none;
+  }
+
+  .cta-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    max-width: 320px;
+  }
+}
+
+/* --- Small phones --- */
+@media (max-width: 480px) {
+  /*
+   * Keep all five links on a single row. Letting them wrap pushed the sticky
+   * navbar to ~175px, which permanently ate a third of a 320x568 viewport.
+   */
+  .nav-links {
+    gap: 0.6rem;
+  }
+
+  .nav-links a {
+    font-size: 0.85rem;
+  }
+
+  .hero-stats {
+    gap: 0.5rem;
+  }
+
   .floating-elements {
+    display: none;
+  }
+
+  .project-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .project-link-btn {
+    width: 100%;
+  }
+
+  .shape {
+    display: none;
+  }
+}
+
+/* --- 320px class devices: stats go single-column so labels stay readable --- */
+@media (max-width: 360px) {
+  :root {
+    --gutter: 0.85rem;
+  }
+
+  .hero-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .nav-links {
+    gap: 0.45rem;
+  }
+
+  .nav-links a {
+    font-size: 0.8rem;
+  }
+
+  .nav-brand a {
+    font-size: 1.25rem;
+  }
+
+  .contact-label {
+    min-width: 0;
+  }
+}
+
+/* --- Ultrawide: stop content stretching into unreadable line lengths --- */
+@media (min-width: 1800px) {
+  .container {
+    max-width: 1440px;
+  }
+
+  .about-section .container {
+    max-width: 1700px;
+  }
+}
+
+/* --- Short landscape phones: a full-height hero traps the content --- */
+@media (max-height: 520px) and (orientation: landscape) {
+  .about-section {
+    min-height: 0;
+  }
+
+  .scroll-indicator {
     display: none;
   }
 }

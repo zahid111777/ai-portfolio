@@ -82,14 +82,17 @@ const Contact: React.FC = () => {
                         </div>
 
                         <div className="social-links">
-                            <a href="https://github.com/zahid111777" className="social-link">GitHub</a>
-                            <a href="https://pk.linkedin.com/in/zahid-rashid-3464b5260" className="social-link">LinkedIn</a>
+                            <a href="https://github.com/zahid111777" className="social-link" target="_blank" rel="noopener noreferrer">GitHub</a>
+                            <a href="https://pk.linkedin.com/in/zahid-rashid-3464b5260" className="social-link" target="_blank" rel="noopener noreferrer">LinkedIn</a>
                         </div>
                     </div>
 
                     <div className="contact-form">
                         {submitStatus.type && (
-                            <div className={`alert alert-${submitStatus.type}`}>
+                            <div
+                                className={`alert alert-${submitStatus.type}`}
+                                role={submitStatus.type === 'error' ? 'alert' : 'status'}
+                            >
                                 {submitStatus.message}
                             </div>
                         )}
@@ -99,6 +102,8 @@ const Contact: React.FC = () => {
                                 <input
                                     type="text"
                                     name="name"
+                                    aria-label="Your Name"
+                                    autoComplete="name"
                                     placeholder="Your Name"
                                     value={formData.name}
                                     onChange={handleChange}
@@ -110,6 +115,8 @@ const Contact: React.FC = () => {
                                 <input
                                     type="email"
                                     name="email"
+                                    aria-label="Your Email"
+                                    autoComplete="email"
                                     placeholder="Your Email"
                                     value={formData.email}
                                     onChange={handleChange}
@@ -121,6 +128,7 @@ const Contact: React.FC = () => {
                                 <input
                                     type="text"
                                     name="subject"
+                                    aria-label="Subject"
                                     placeholder="Subject"
                                     value={formData.subject}
                                     onChange={handleChange}
@@ -131,6 +139,7 @@ const Contact: React.FC = () => {
                             <div className="form-group">
                                 <textarea
                                     name="message"
+                                    aria-label="Your Message"
                                     placeholder="Your Message"
                                     rows={6}
                                     value={formData.message}
